@@ -1,16 +1,18 @@
 package com.wycliffe.services.controller;
 
 import com.wycliffe.services.model.Account;
-import com.wycliffe.services.model.Authentication;
+import com.wycliffe.services.service.AccountService;
+import com.wycliffe.services.utils.RestMetaData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.wycliffe.services.service.AccountService;
-import com.wycliffe.services.utils.RestMetaData;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,36 +24,46 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:9000")
 @RequestMapping("/v1/accounts")
 public class AccountController {
+
+    @Bean
+    public WebMvcConfigurer corsConfigurerAccounts() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/v1/accounts").allowedOrigins("http://www.wybosoftbank.com:8080");
+                //registry.addMapping("/v1/accounts").allowedOrigins("http://localhost:3001");
+                // registry.addMapping("/v1/auth").allowedOrigins("http://localhost:3001");
+            }
+        };
+    }
     @Autowired
     AccountService accountService;
-    Date date, errorDate = new Date();
+    private Date date = new Date();
+    private Long queryStartTime = System.currentTimeMillis();
+    private RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, date, "Account response");
+    private HashMap<String, Object> response = new HashMap();
     private static final Logger LOGGER = LogManager.getLogger(AccountController.class);
 
-    //actual API
+    //API to all accounts
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<HashMap<String, Object>> fetchAccount() {
-        Long queryStartTime = System.currentTimeMillis();
-        try {
-            List<Account> listAccount = new ArrayList<>();
-            listAccount = accountService.getAccounts();
-            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, date, "Account response");
 
-            HashMap<String, Object> response = new HashMap();
+        try {
+            List<Account> listAccount;
+            listAccount = accountService.getAccounts();
             response.put("MetaData", restMetaData.toString());
             response.put("Wycliffe Headers", "Customers API. Get all customers Data");
             response.put("Data", listAccount);
 
             LOGGER.info(listAccount);
-            return new ResponseEntity<HashMap<String, Object>>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
-            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, errorDate, "Unexpected Error Occurred");
             System.out.println(e.getMessage());
-            HashMap<String, Object> response = new HashMap();
             response.put("MetaData", restMetaData);
             response.put("Error", e.getMessage());
             response.put("Data", null);
-            return new ResponseEntity<HashMap<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         } finally {
             //timing goes here
             System.out.println("Success fetching of account data");
@@ -62,29 +74,27 @@ public class AccountController {
     //API definition
     @RequestMapping(value = "customer", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<HashMap<String, Object>> fetchLogins(@RequestParam String cid) {
-        Long queryStartTime = System.currentTimeMillis();
         try {
             //StringUtils.isBlank()
-            List<Account> userAccount = new ArrayList<>();
+            List<Account> userAccount;
             userAccount = accountService.getAccountDetails(cid);
             Date date = new Date();
 
-            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, date, "Processing Time");
             HashMap<String, Object> loginMap = new HashMap<>();
             loginMap.put("Metadata", restMetaData.toString());
             loginMap.put("Wycliffe Headers", "Login Data");
             loginMap.put("Data", userAccount);
 
             System.out.println(userAccount);
-            return new ResponseEntity<HashMap<String, Object>>(loginMap, HttpStatus.OK);
-        } catch (Exception e) {
+            return new ResponseEntity<>(loginMap, HttpStatus.OK);
+        } catch (Exception customerException) {
             Date errorDate = new Date();
             RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, errorDate, "Some error occured");
             HashMap<String, Object> loginError = new HashMap<>();
             loginError.put("MetaData", restMetaData.toString());
-            loginError.put("Data", e.getMessage());
+            loginError.put("Data", customerException.getMessage());
 
-            return new ResponseEntity<HashMap<String, Object>>(loginError, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(loginError, HttpStatus.INTERNAL_SERVER_ERROR);
         } finally {
             //timing goes here
             System.out.println("Success fetching of Customer Account Details");

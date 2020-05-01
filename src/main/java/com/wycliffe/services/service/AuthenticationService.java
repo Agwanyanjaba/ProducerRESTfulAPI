@@ -34,6 +34,7 @@ public class AuthenticationService {
                     LOGGER.debug("Returned Auth info" + authentication);
                     LOGGER.error("Returned Auth info" + authentication);
                     return authentication;
+
                 }, username
         );
     }

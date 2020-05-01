@@ -27,7 +27,7 @@ public class AuthenticationController {
         Long queryStartTime = System.currentTimeMillis();
         try{
             //StringUtils.isBlank()
-            List<Authentication> listLogin = new ArrayList<>();
+            List<Authentication> listLogin ;
             listLogin = authenticationService.getLoginCredentials(username);
             Date date =  new Date();
 
@@ -35,10 +35,11 @@ public class AuthenticationController {
             HashMap<String,Object> loginMap = new HashMap<>();
             loginMap.put("Metadata",restMetaData.toString());
             loginMap.put("Wycliffe Headers","Login Data");
-            loginMap.put("Data",listLogin);
+            //loginMap.put("Data",listLogin);
+            loginMap.put("Data","success");
 
             System.out.println(listLogin);
-            return new ResponseEntity<HashMap<String, Object>>(loginMap, HttpStatus.OK);
+            return new ResponseEntity<>(loginMap, HttpStatus.OK);
         }
        catch (Exception e){
             Date errorDate = new Date();
@@ -47,7 +48,7 @@ public class AuthenticationController {
             loginError.put("MetaData", restMetaData.toString());
             loginError.put("Data",e.getMessage());
 
-            return new ResponseEntity<HashMap<String, Object>>(loginError,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(loginError,HttpStatus.INTERNAL_SERVER_ERROR);
        }
         finally {
             //timing goes here
@@ -62,10 +63,11 @@ public class AuthenticationController {
         try{
             //StringUtils.isBlank()
             //To do sanitize inputs
-            Map<String, Object> mapResponse = new HashMap<>();
+            Map<String, Object> mapResponse;
             mapResponse = authenticationService.createUserCredentials(userView);
 
             if(mapResponse==null){
+                String msg = "success";
                 System.out.println(userView.getUsername()+" not Created");
                 Date date =  new Date();
                 RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis()-queryStartTime,date,"Unexpected Error occured");
@@ -73,7 +75,7 @@ public class AuthenticationController {
                 loginMap.put("Metadata",restMetaData.toString());
                 loginMap.put("Data",mapResponse);
 
-                return new ResponseEntity<HashMap<String, Object>>(loginMap, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(loginMap, HttpStatus.INTERNAL_SERVER_ERROR);
 
             }
 
@@ -85,7 +87,7 @@ public class AuthenticationController {
             loginMap.put("Wycliffe Headers","Login Data");
             loginMap.put("Data",mapResponse);
 
-            return new ResponseEntity<HashMap<String, Object>>(loginMap, HttpStatus.CREATED);
+            return new ResponseEntity<>(loginMap, HttpStatus.CREATED);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -95,7 +97,7 @@ public class AuthenticationController {
             loginError.put("MetaData", restMetaData.toString());
             loginError.put("Data",e.getMessage());
 
-            return new ResponseEntity<HashMap<String, Object>>(loginError,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(loginError,HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
         finally {

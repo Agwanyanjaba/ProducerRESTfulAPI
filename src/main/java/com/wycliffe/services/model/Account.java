@@ -9,6 +9,7 @@ public class Account {
     private String  MSISDN;
     private String IMEI;
     private String TOKEN;
+    private double balance;
 
     public String getEmail() {
         return email;
@@ -25,8 +26,6 @@ public class Account {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-
-    private double balance;
 
     public String getCID() {
         return CID;

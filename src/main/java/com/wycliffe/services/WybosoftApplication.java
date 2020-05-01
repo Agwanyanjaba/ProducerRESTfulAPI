@@ -14,12 +14,10 @@ public class WybosoftApplication {
 	}
 
 	@Bean
-	public WebMvcConfigurer corsConfigurer() {
+	public WebMvcConfigurer corsConfigurer1() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/v1/accounts").allowedOrigins("http://localhost:3001");
-               //                                                                                                                                                                                                                                                               registry.addMapping("/v1/auth").allowedOrigins("http://localhost:3001");
 			}
 		};
 

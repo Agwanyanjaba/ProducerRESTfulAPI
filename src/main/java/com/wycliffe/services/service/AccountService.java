@@ -13,6 +13,10 @@ import java.util.List;
 @Component
 public class AccountService {
 
+    //Declare account objects
+    private Account account = new Account();
+    private Account userAccount = new Account();
+
     @Autowired
     private JdbcTemplate myJdbcTemplate;
     private static final Logger LOGGER = LogManager.getLogger(AccountService.class);
@@ -20,7 +24,6 @@ public class AccountService {
     public List<Account> getAccounts() {
         String sqlQuery = "SELECT * FROM customers";
         return myJdbcTemplate.query(sqlQuery, (rs, rowNum) -> {
-            Account account = new Account();
             account.setCID(rs.getString("cid"));
             account.setPID(rs.getString("pid"));
             account.setFirstName(rs.getString("FirstName"));
@@ -40,7 +43,6 @@ public class AccountService {
     public List<Account> getAccountDetails(String cid) {
         String accountQuery = "SELECT * FROM customers WHERE cid = ?";
         return myJdbcTemplate.query(accountQuery, (rs, rowNum) -> {
-            Account userAccount = new Account();
             userAccount.setCID(rs.getString("cid"));
             userAccount.setPID(rs.getString("pid"));
             userAccount.setFirstName(rs.getString("FirstName"));

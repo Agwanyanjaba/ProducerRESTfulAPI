@@ -38,4 +38,14 @@ public class Transaction {
         this.amount = amount;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "transactionID='" + transactionID + '\'' +
+                ", cid='" + cid + '\'' +
+                ", transaction_date='" + transaction_date + '\'' +
+                ", amount=" + amount +
+                '}';
+    }
+
 }
