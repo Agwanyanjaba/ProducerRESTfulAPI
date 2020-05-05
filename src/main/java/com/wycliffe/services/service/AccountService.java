@@ -6,9 +6,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.*;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class AccountService {
@@ -60,6 +65,37 @@ public class AccountService {
             return userAccount;
         }, cid
         );
+    }
+
+    //Service to update customers after transaction is successful
+    //Pass customerID
+
+    public int updateCustomer(Account accountUpdate) {
+        System.out.println("Account Obj"+accountUpdate.toString());
+        String accountQuery = "UPDATE customers SET balance =? WHERE cid = ?";
+        int updatedCustomers = 0;
+
+        try {
+            updatedCustomers = myJdbcTemplate.update(accountQuery,accountUpdate.getBalance(),accountUpdate.getCID());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updatedCustomers;
+    }
+
+    public int registerCustomer(Account accountUpdate) {
+        System.out.println("Account Obj"+accountUpdate.toString());
+        String accountQuery = "UPDATE customers SET balance =? WHERE cid = ?";
+        int updatedCustomers = 0;
+
+        try {
+            updatedCustomers = myJdbcTemplate.update(accountQuery,accountUpdate.getBalance(),accountUpdate.getCID());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updatedCustomers;
     }
 
 }

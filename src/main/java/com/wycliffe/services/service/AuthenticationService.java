@@ -1,6 +1,7 @@
 package com.wycliffe.services.service;
 
 import com.wycliffe.services.model.Authentication;
+import com.wycliffe.services.utils.BCryptHashing;
 import com.wycliffe.services.viewModel.UserView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,6 +22,9 @@ public class AuthenticationService {
     @Autowired
     private JdbcTemplate loginTemplate;
 
+    @Autowired
+    private BCryptHashing bCryptHashing;
+
     // String username;
     public List<Authentication> getLoginCredentials(String username) {
         String loginQuery = "SELECT * FROM users WHERE username = ?";
@@ -40,7 +44,9 @@ public class AuthenticationService {
     }
 
     public Map<String, Object> createUserCredentials(UserView userView) {
-        String sqlQuery = "insert into users (username, password,role,lastlogin) values(?,?,?,?) ";
+        userView.setPassword(bCryptHashing.enrcyptPassword(userView.getPassword()));
+        //String sqlQuery = "insert into users (username, password,role,lastlogin) values(?,SHA2(?,224),?,?) ";
+        String sqlQuery = "insert into users (username, password,role,lastlogin) values(?,?,?,?)";
         KeyHolder userHolder = new GeneratedKeyHolder();
         Map<String, Object> queryResponse = null;
 
