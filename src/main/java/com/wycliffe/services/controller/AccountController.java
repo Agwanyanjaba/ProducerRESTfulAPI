@@ -125,8 +125,44 @@ public class AccountController {
                 return new ResponseEntity<HashMap<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 
             }
+        } catch (Exception e) {
+            Date errorDate = new Date();
+            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, errorDate, "Unexpected Error Occurred");
+            System.out.println(e.getMessage());
+            HashMap<String, Object> response = new HashMap();
+            response.put("MetaData", restMetaData);
+            response.put("Error", e.getMessage());
+            response.put("Data", null);
+            return new ResponseEntity<HashMap<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            //timing goes here
+            System.out.println("Success fetching of account data");
+        }
+    }
+    //Registration API
+    @RequestMapping(value = "/registration/{cid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<HashMap<String, Object>> registerCustomerUpdate(@PathVariable String cid,@RequestBody Account accountUpdate) {
+        Long queryStartTime = System.currentTimeMillis();
 
+        try {
+            int transactionResponse = 0;
+            accountUpdate.setCID(cid);
+            transactionResponse = accountService.registerCustomer(accountUpdate);
 
+            HashMap<String, Object> response = new HashMap();
+            if (transactionResponse == 1) {
+                response.put("MetaData", restMetaData.toString());
+                response.put("Wycliffe Headers", "Customers API. Get all customers Data");
+                response.put("Data", "Success");
+                return new ResponseEntity<HashMap<String, Object>>(response, HttpStatus.CREATED);
+
+            } else {
+                response.put("MetaData", restMetaData.toString());
+                response.put("Wycliffe Headers", "Customers API. Get all customers Data");
+                response.put("Data", "Failed");
+                return new ResponseEntity<HashMap<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+            }
         } catch (Exception e) {
             Date errorDate = new Date();
             RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, errorDate, "Unexpected Error Occurred");

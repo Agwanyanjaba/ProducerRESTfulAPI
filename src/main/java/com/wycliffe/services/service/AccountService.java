@@ -2,6 +2,7 @@ package com.wycliffe.services.service;
 
 import com.wycliffe.services.model.Account;
 import com.wycliffe.services.model.Authentication;
+import com.wycliffe.services.utils.BCryptHashing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class AccountService {
 
     @Autowired
     private JdbcTemplate myJdbcTemplate;
+    @Autowired
+    private BCryptHashing bCryptHashing;
+
     private static final Logger LOGGER = LogManager.getLogger(AccountService.class);
 
     public List<Account> getAccounts() {
@@ -85,12 +89,23 @@ public class AccountService {
     }
 
     public int registerCustomer(Account accountUpdate) {
+        accountUpdate.setPID(bCryptHashing.enrcyptPassword(accountUpdate.getPID()));
         System.out.println("Account Obj"+accountUpdate.toString());
-        String accountQuery = "UPDATE customers SET balance =? WHERE cid = ?";
+        String accountQuery = "UPDATE customers SET pid=?,FirstName=?,LastName=?,msisdn=?,imei=?,token =?,status =? WHERE cid = ?";
         int updatedCustomers = 0;
 
         try {
-            updatedCustomers = myJdbcTemplate.update(accountQuery,accountUpdate.getBalance(),accountUpdate.getCID());
+            //updatedCustomers = myJdbcTemplate.update(accountQuery,accountUpdate.getBalance(),accountUpdate.getCID());
+            updatedCustomers = myJdbcTemplate.update(
+                    accountQuery,accountUpdate.getPID(),
+                    accountUpdate.getFirstName(),
+                    accountUpdate.getLastName(),
+                    accountUpdate.getMSISDN(),
+                    accountUpdate.getIMEI(),
+                    accountUpdate.getTOKEN(),
+                    1,
+                    accountUpdate.getCID()
+            );
 
         } catch (Exception e) {
             e.printStackTrace();
