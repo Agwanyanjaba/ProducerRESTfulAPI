@@ -50,7 +50,7 @@ public class TransactionService {
     //get all transactions
     //transactionID | cid    | transaction_date    | amount
     public List<Transaction> getTransactions() {
-        String sqlQuery = "SELECT * FROM  transactions order by transaction_date DESC;";
+        String sqlQuery = "SELECT * FROM  transactions order by transaction_date DESC";
         return transactionJDBCTemplate.query(sqlQuery, (rs, rowNum) -> {
             Transaction transaction = new Transaction();
             transaction.setTransactionID(rs.getString("transactionID"));

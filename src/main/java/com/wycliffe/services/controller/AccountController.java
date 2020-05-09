@@ -46,8 +46,8 @@ public class AccountController {
     public ResponseEntity<HashMap<String, Object>> fetchAccount() {
 
         try {
-            List<Account> listAccount;
-            listAccount = accountService.getAccounts();
+            List<Account> listAccount = new ArrayList<>();
+            listAccount = accountService.getAllCustomersList();
             response.put("MetaData", restMetaData.toString());
             response.put("Wycliffe Headers", "Customers API. Get all customers Data");
             response.put("Data", listAccount);

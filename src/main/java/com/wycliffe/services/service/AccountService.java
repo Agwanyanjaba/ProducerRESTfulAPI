@@ -20,7 +20,6 @@ import java.util.Map;
 public class AccountService {
 
     //Declare account objects
-    private Account account = new Account();
     private Account userAccount = new Account();
 
     @Autowired
@@ -30,20 +29,22 @@ public class AccountService {
 
     private static final Logger LOGGER = LogManager.getLogger(AccountService.class);
 
-    public List<Account> getAccounts() {
+    //Service to get all customers
+    public List<Account> getAllCustomersList() {
         String sqlQuery = "SELECT * FROM customers";
         return myJdbcTemplate.query(sqlQuery, (rs, rowNum) -> {
-            account.setCID(rs.getString("cid"));
-            account.setPID(rs.getString("pid"));
-            account.setFirstName(rs.getString("FirstName"));
-            account.setLastName(rs.getString("LastName"));
-            account.setEmail(rs.getString("email"));
-            account.setMSISDN(rs.getString("msisdn"));
-            account.setIMEI(rs.getString("imei"));
-            account.setTOKEN(rs.getString("token"));
-            account.setBalance(rs.getDouble("balance"));
+            Account allCustomersList = new Account();
+            allCustomersList.setCID(rs.getString("cid"));
+            allCustomersList.setPID(rs.getString("pid"));
+            allCustomersList.setFirstName(rs.getString("FirstName"));
+            allCustomersList.setLastName(rs.getString("LastName"));
+            allCustomersList.setEmail(rs.getString("email"));
+            allCustomersList.setMSISDN(rs.getString("msisdn"));
+            allCustomersList.setIMEI(rs.getString("imei"));
+            allCustomersList.setTOKEN(rs.getString("token"));
+            allCustomersList.setBalance(rs.getDouble("balance"));
 
-            return account;
+            return allCustomersList;
         });
     }
 

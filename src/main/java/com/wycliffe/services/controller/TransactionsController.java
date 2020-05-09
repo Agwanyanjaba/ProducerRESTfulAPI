@@ -44,7 +44,7 @@ import java.util.*;
     private TransactionService transactionService;
     private static final Logger LOGGER = LogManager.getLogger(TransactionsController.class);
 
-    //Transaction API
+    //POST Transaction API
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<HashMap<String, Object>> commitTransaction(@RequestBody Transaction transaction) {
         Long queryStartTime = System.currentTimeMillis();
