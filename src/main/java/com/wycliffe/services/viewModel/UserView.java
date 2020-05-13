@@ -46,4 +46,8 @@ public class UserView {
     public void setLastlogin(String lastlogin) {
         this.lastlogin = lastlogin;
     }
+
+    public String getMessage() {
+        return password;
+    }
 }
