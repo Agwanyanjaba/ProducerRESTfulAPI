@@ -33,6 +33,7 @@ public class AccountController {
             }
         };
     }
+
     @Autowired
     AccountService accountService;
     private Date date = new Date();
@@ -100,7 +101,7 @@ public class AccountController {
 
     //API to update account
     @RequestMapping(value = "/customers/{cid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<HashMap<String, Object>> commitCustomerUpdate(@PathVariable String cid,@RequestBody Account accountUpdate) {
+    public ResponseEntity<HashMap<String, Object>> commitCustomerUpdate(@PathVariable String cid, @RequestBody Account accountUpdate) {
         Long queryStartTime = System.currentTimeMillis();
 
         try {
@@ -139,9 +140,10 @@ public class AccountController {
             System.out.println("Success fetching of account data");
         }
     }
+
     //Registration API
     @RequestMapping(value = "/registration/{cid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<HashMap<String, Object>> registerCustomerUpdate(@PathVariable String cid,@RequestBody Account accountUpdate) {
+    public ResponseEntity<HashMap<String, Object>> registerCustomerUpdate(@PathVariable String cid, @RequestBody Account accountUpdate) {
         Long queryStartTime = System.currentTimeMillis();
 
         try {

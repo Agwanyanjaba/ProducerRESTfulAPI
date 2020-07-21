@@ -53,22 +53,22 @@ public class AccountService {
     public List<Account> getAccountDetails(String cid) {
         String accountQuery = "SELECT * FROM customers WHERE cid = ?";
         return myJdbcTemplate.query(accountQuery, (rs, rowNum) -> {
-            userAccount.setCID(rs.getString("cid"));
-            userAccount.setPID(rs.getString("pid"));
-            userAccount.setFirstName(rs.getString("FirstName"));
-            userAccount.setLastName(rs.getString("LastName"));
-            userAccount.setEmail(rs.getString("email"));
-            userAccount.setMSISDN(rs.getString("msisdn"));
-            userAccount.setIMEI(rs.getString("imei"));
-            userAccount.setTOKEN(rs.getString("token"));
-            userAccount.setBalance(rs.getDouble("balance"));
+                    userAccount.setCID(rs.getString("cid"));
+                    userAccount.setPID(rs.getString("pid"));
+                    userAccount.setFirstName(rs.getString("FirstName"));
+                    userAccount.setLastName(rs.getString("LastName"));
+                    userAccount.setEmail(rs.getString("email"));
+                    userAccount.setMSISDN(rs.getString("msisdn"));
+                    userAccount.setIMEI(rs.getString("imei"));
+                    userAccount.setTOKEN(rs.getString("token"));
+                    userAccount.setBalance(rs.getDouble("balance"));
 
-            System.out.println(userAccount);
-            LOGGER.info("Returned Auth info" + userAccount);
-            LOGGER.debug("Returned Auth info" + userAccount);
-            LOGGER.error("Returned Auth info" + userAccount);
-            return userAccount;
-        }, cid
+                    System.out.println(userAccount);
+                    LOGGER.info("Returned Auth info" + userAccount);
+                    LOGGER.debug("Returned Auth info" + userAccount);
+                    LOGGER.error("Returned Auth info" + userAccount);
+                    return userAccount;
+                }, cid
         );
     }
 
@@ -76,12 +76,12 @@ public class AccountService {
     //Pass customerID
 
     public int updateCustomer(Account accountUpdate) {
-        System.out.println("Account Obj"+accountUpdate.toString());
+        System.out.println("Account Obj" + accountUpdate.toString());
         String accountQuery = "UPDATE customers SET balance =? WHERE cid = ?";
         int updatedCustomers = 0;
 
         try {
-            updatedCustomers = myJdbcTemplate.update(accountQuery,accountUpdate.getBalance(),accountUpdate.getCID());
+            updatedCustomers = myJdbcTemplate.update(accountQuery, accountUpdate.getBalance(), accountUpdate.getCID());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,14 +91,14 @@ public class AccountService {
 
     public int registerCustomer(Account accountUpdate) {
         accountUpdate.setPID(bCryptHashing.enrcyptPassword(accountUpdate.getPID()));
-        System.out.println("Account Obj"+accountUpdate.toString());
+        System.out.println("Account Obj" + accountUpdate.toString());
         String accountQuery = "UPDATE customers SET pid=?,FirstName=?,LastName=?,msisdn=?,imei=?,token =?,status =? WHERE cid = ?";
         int updatedCustomers = 0;
 
         try {
             //updatedCustomers = myJdbcTemplate.update(accountQuery,accountUpdate.getBalance(),accountUpdate.getCID());
             updatedCustomers = myJdbcTemplate.update(
-                    accountQuery,accountUpdate.getPID(),
+                    accountQuery, accountUpdate.getPID(),
                     accountUpdate.getFirstName(),
                     accountUpdate.getLastName(),
                     accountUpdate.getMSISDN(),

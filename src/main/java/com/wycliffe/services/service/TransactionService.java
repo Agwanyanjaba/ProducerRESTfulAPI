@@ -47,6 +47,7 @@ public class TransactionService {
         LOGGER.info(transactionResponse);
         return transactionResponse;
     }
+
     //get all transactions
     //transactionID | cid    | transaction_date    | amount
     public List<Transaction> getTransactions() {
@@ -67,13 +68,13 @@ public class TransactionService {
     public List<Transaction> getTranDetails(String cid) {
         String accountQuery = "SELECT * FROM transactions WHERE cid = ? order by transaction_date DESC";
         return transactionJDBCTemplate.query(accountQuery, (rs, rowNum) -> {
-            Transaction userTransaction = new Transaction();
-            userTransaction.setTransactionID(rs.getString("transactionID"));
-            userTransaction.setCid(rs.getString("cid"));
-            userTransaction.setTransaction_date(rs.getString("transaction_date"));
-            userTransaction.setAmount(rs.getDouble("amount"));
+                    Transaction userTransaction = new Transaction();
+                    userTransaction.setTransactionID(rs.getString("transactionID"));
+                    userTransaction.setCid(rs.getString("cid"));
+                    userTransaction.setTransaction_date(rs.getString("transaction_date"));
+                    userTransaction.setAmount(rs.getDouble("amount"));
 
-            return userTransaction; //return list of all transaction for the user
+                    return userTransaction; //return list of all transaction for the user
                 }, cid
         );
     }

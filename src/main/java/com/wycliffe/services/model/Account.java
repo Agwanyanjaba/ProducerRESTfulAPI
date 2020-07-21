@@ -2,11 +2,11 @@ package com.wycliffe.services.model;
 
 public class Account {
     private String CID;
-    private  String PID;
+    private String PID;
     private String FirstName;
     private String LastName;
     private String email;
-    private String  MSISDN;
+    private String MSISDN;
     private String IMEI;
     private String TOKEN;
     private double balance;

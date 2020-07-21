@@ -4,7 +4,7 @@ public class UserView {
     private String id;
     private String username;
     private String password;
-    private  String role;
+    private String role;
     private String lastlogin;
 
     public String getId() {

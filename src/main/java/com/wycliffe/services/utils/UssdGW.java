@@ -10,7 +10,7 @@ import java.net.URL;
 import java.sql.Timestamp;
 
 public class UssdGW {
-    Account account  =  new Account();
+    Account account = new Account();
     UserView userview = new UserView();
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     /*ussd configuration */
@@ -24,33 +24,30 @@ public class UssdGW {
     String MSISDN = account.getMSISDN();
     Timestamp Session = timestamp;
 
-        public String sendPush() {
-            try {
-                // Construct data
-                String numbers = "&numbers=" + "447123456789";
+    public String sendPush() {
+        try {
+            // Send data
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            String data = apiKey + Session + message + MSISDN;
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
+            conn.getOutputStream().write(data.getBytes("UTF-8"));
+            final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            final StringBuffer stringBuffer = new StringBuffer();
+            rd.close();
+            URL url = new URL("http://wybosoftbank.com/ussd/transactions");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
 
-                // Send data
-                HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-                String data = apiKey + Session + message + MSISDN;
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
-                conn.getOutputStream().write(data.getBytes("UTF-8"));
-                final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                final StringBuffer stringBuffer = new StringBuffer();
-                rd.close();
-                URL url = new URL("http://wybosoftbank.com/ussd/transactions");
-                HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
-
-                int code = connection.getResponseCode();
-                return stringBuffer.toString();
-            } catch (Exception e) {
-                System.out.println("Error USSD push timeout "+e);
-                return "Error "+e;
-            }
+            int code = connection.getResponseCode();
+            return stringBuffer.toString();
+        } catch (Exception e) {
+            System.out.println("Error USSD push timeout " + e);
+            return "Error " + e;
         }
+    }
 
 
 }

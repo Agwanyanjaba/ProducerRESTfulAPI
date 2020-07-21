@@ -1,13 +1,15 @@
 package com.wycliffe.services.utils;
+
 import java.security.NoSuchAlgorithmException;
+
 import com.wycliffe.services.viewModel.UserView;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BCryptHashing {
 
-    public String  enrcyptPassword(String originalPassword){
-        UserView user=  new UserView();
+    public String enrcyptPassword(String originalPassword) {
+        UserView user = new UserView();
         String generatedSecuredPasswordHash = BCrypt.hashpw(originalPassword, BCrypt.gensalt(12));
         System.out.println(generatedSecuredPasswordHash);
 

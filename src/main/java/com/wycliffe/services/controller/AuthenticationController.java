@@ -19,92 +19,89 @@ import java.util.*;
 
 
 public class AuthenticationController {
-    @Autowired AuthenticationService authenticationService;
+    @Autowired
+    AuthenticationService authenticationService;
 
     //API definition
-    @RequestMapping (value = "username",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity <HashMap<String,Object>> fetchLogins(@RequestParam String username){
+    @RequestMapping(value = "username", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<HashMap<String, Object>> fetchLogins(@RequestParam String username) {
         Long queryStartTime = System.currentTimeMillis();
-        try{
+        try {
             //StringUtils.isBlank()
-            List<Authentication> listLogin ;
+            List<Authentication> listLogin;
             listLogin = authenticationService.getLoginCredentials(username);
-            Date date =  new Date();
+            Date date = new Date();
 
-            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis()-queryStartTime,date,"Processing Time");
-            HashMap<String,Object> loginMap = new HashMap<>();
-            loginMap.put("Metadata",restMetaData.toString());
-            loginMap.put("Wycliffe Headers","Login Data");
+            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, date, "Processing Time");
+            HashMap<String, Object> loginMap = new HashMap<>();
+            loginMap.put("Metadata", restMetaData.toString());
+            loginMap.put("Wycliffe Headers", "Login Data");
             //loginMap.put("Data",listLogin);
-            loginMap.put("Data","success");
+            loginMap.put("Data", "success");
 
             System.out.println(listLogin);
             return new ResponseEntity<>(loginMap, HttpStatus.OK);
-        }
-       catch (Exception e){
+        } catch (Exception e) {
             Date errorDate = new Date();
-            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis()-queryStartTime,errorDate,"Some error occured");
-            HashMap<String,Object> loginError = new HashMap<>();
+            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, errorDate, "Some error occured");
+            HashMap<String, Object> loginError = new HashMap<>();
             loginError.put("MetaData", restMetaData.toString());
-            loginError.put("Data",e.getMessage());
+            loginError.put("Data", e.getMessage());
 
-            return new ResponseEntity<>(loginError,HttpStatus.INTERNAL_SERVER_ERROR);
-       }
-        finally {
+            return new ResponseEntity<>(loginError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
             //timing goes here
             System.out.println("Success fetching of login data");
         }
     }
+
     //Create user API definition
-    @RequestMapping (value = "",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity <HashMap<String,Object>> createUser(@RequestBody UserView userView){
+    public ResponseEntity<HashMap<String, Object>> createUser(@RequestBody UserView userView) {
         Long queryStartTime = System.currentTimeMillis();
-        try{
+        try {
             //StringUtils.isBlank()
             //To do sanitize inputs
             Map<String, Object> mapResponse;
             mapResponse = authenticationService.createUserCredentials(userView);
 
-            if(mapResponse==null){
+            if (mapResponse == null) {
                 String msg = "success";
-                System.out.println(userView.getUsername()+" not Created");
-                Date date =  new Date();
-                RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis()-queryStartTime,date,"Unexpected Error occured");
-                HashMap<String,Object> loginMap = new HashMap<>();
-                loginMap.put("Metadata",restMetaData.toString());
-                loginMap.put("Data",mapResponse);
+                System.out.println(userView.getUsername() + " not Created");
+                Date date = new Date();
+                RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, date, "Unexpected Error occured");
+                HashMap<String, Object> loginMap = new HashMap<>();
+                loginMap.put("Metadata", restMetaData.toString());
+                loginMap.put("Data", mapResponse);
 
                 return new ResponseEntity<>(loginMap, HttpStatus.INTERNAL_SERVER_ERROR);
 
             }
 
-            Date date =  new Date();
+            Date date = new Date();
 
-            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis()-queryStartTime,date,"Processing Time");
-            HashMap<String,Object> loginMap = new HashMap<>();
-            loginMap.put("Metadata",restMetaData.toString());
-            loginMap.put("Wycliffe Headers","Login Data");
-            loginMap.put("Data",mapResponse);
+            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, date, "Processing Time");
+            HashMap<String, Object> loginMap = new HashMap<>();
+            loginMap.put("Metadata", restMetaData.toString());
+            loginMap.put("Wycliffe Headers", "Login Data");
+            loginMap.put("Data", mapResponse);
 
             return new ResponseEntity<>(loginMap, HttpStatus.CREATED);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Date errorDate = new Date();
-            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis()-queryStartTime,errorDate,"Some error occured");
-            HashMap<String,Object> loginError = new HashMap<>();
+            RestMetaData restMetaData = new RestMetaData(System.currentTimeMillis() - queryStartTime, errorDate, "Some error occured");
+            HashMap<String, Object> loginError = new HashMap<>();
             loginError.put("MetaData", restMetaData.toString());
-            loginError.put("Data",e.getMessage());
+            loginError.put("Data", e.getMessage());
 
-            return new ResponseEntity<>(loginError,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(loginError, HttpStatus.INTERNAL_SERVER_ERROR);
 
-        }
-        finally {
+        } finally {
             //timing goes here
             System.out.println("Success fetching of login data");
         }
-
 
 
     }

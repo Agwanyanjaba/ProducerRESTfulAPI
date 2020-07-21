@@ -1,9 +1,10 @@
 package com.wycliffe.services.model;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class Authentication  {
+public class Authentication {
     @Id
     private String username;
     private String password;
@@ -25,7 +26,7 @@ public class Authentication  {
     }
 
     @Override
-    public String toString(){
-        return "Authentication{"+ "username='"+username+" '\'',"+ "password='"+password+" ''}";
+    public String toString() {
+        return "Authentication{" + "username='" + username + " '\''," + "password='" + password + " ''}";
     }
 }
