@@ -3,7 +3,6 @@ package com.wycliffe.services.controller;
 import com.wycliffe.services.model.Transaction;
 import com.wycliffe.services.service.TransactionService;
 import com.wycliffe.services.utils.RestMetaData;
-import org.apache.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.format.FormatterRegistry;
